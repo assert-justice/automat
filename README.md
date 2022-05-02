@@ -16,6 +16,8 @@ The `automat` command alone begins a live session.
 ### Out of Sequence
 Out of sequence commands are not saved as part of a sequence but typically modify them.
 
+`start [url]`: Begin a sequence at a given url.
+
 `save [sequence name]`: Save a sequence as a file.
 
 `play [sequence name]`: Begin running an existing sequence file. Sequences can call sequences.
@@ -28,10 +30,10 @@ Out of sequence commands are not saved as part of a sequence but typically modif
 
 `secret [name] [string]`: Save a value to the .secrets file.
 
+`quit`: Ends interactive session. Can halt sequences prematurely.
+
 ### In Sequence
 In sequence actions are saved as part of sequences.
-
-`start [url]`: Begin a sequence at a given url.
 
 `goto [url]`: Jump to a url *without* beginning a new sequence.
 
