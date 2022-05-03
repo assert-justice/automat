@@ -1,6 +1,1 @@
-start https://myurl.com
-grab #username
-text Riley
-grab #password
-text_s my_pwd
-click 
+start https://commerce.cashnet.com/gsec
