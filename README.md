@@ -49,9 +49,11 @@ In sequence actions are saved as part of sequences.
 
 `click [query selector]`: Click an element, typically a button.
 
-`click_x [query selector]`: As above but uses an xpath instead of a query selector.
+`click_x [xpath]`: As above but uses an xpath instead of a query selector.
 
 `enter`: Send a physical enter key, typically used to submit forms.
+
+`tab`: Send a physical tab key, typically used to navigate forms.
 
 ## Example
 A simple example to show how a sequence looks.
