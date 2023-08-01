@@ -41,11 +41,17 @@ In sequence actions are saved as part of sequences.
 
 `grab_x [xpath]`: As above but uses an xpath instead of a query selector.
 
-`text [string]`: Enter a string of characters into a text field or similar.
+`text [string]`: Enter a string of characters into the grabbed element.
 
-`text_s [secret]`: Enter a value from secrets into a text field or similar.
+`text_s [secret]`: Enter a value from secrets into the grabbed element.
 
-`text_i`: Enter a series of characters from the user into a text field or similar.
+`text_i`: Enter a series of characters from the user into the grabbed element.
+
+`select [index]`: Select an option from the focused select element by index.
+
+`select_v [string]`: Select an option from the focused select element by its value.
+
+`select_t [string]`: Select an option from the focused select element by its text.
 
 `click [query selector]`: Click an element, typically a button.
 

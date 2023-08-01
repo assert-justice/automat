@@ -27,9 +27,13 @@ class Automat:
             "goto":self.goto,
             "grab":self.grab,
             "grab_x":self.grab_x,
+            "clear":self.clear,
             "text":self.text,
             "text_s":self.text_s,
             "text_i":self.text_i,
+            "select":self.select,
+            "select_v":self.select_v,
+            "select_t":self.select_t,
             "click":self.click,
             "click_x":self.click_x,
             "enter":self.enter,
@@ -44,10 +48,26 @@ class Automat:
             "reset",
             "secret",
             "quit",}
+        with open("secrets.json", "a") as f:
+            f.write("")
+        with open("secrets.json", "r") as f:
+            text = f.read()
+            if len(text) > 0:
+                self.secrets = json.loads(text)
+    def find_element(self, find_by, identifier):
+        try:
+            element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((find_by, identifier))
+            )
+            return element
+        except:
+            return None
     def start(self, url):
         self.sequence = self.sequence[self.checkpoint:]
-        self.driver.get(url)
-        self.run_seq(self.sequence)
+        self.goto(url)
+        # if len(self.sequence) == 0:
+        #     self.sequence.append(f"goto {url}")
+        # self.run_seq(self.sequence)
     def save(self, name):
         with open(f"sequences/{name}.mat", "w") as f:
             f.write("\n".join(self.sequence))
@@ -58,7 +78,8 @@ class Automat:
         self.secrets[name] = val
     def quit(self):
         self.running = False
-        if self.driver:
+        if self.driver != None:
+            # quit isn't working God knows why
             self.driver.quit()
     def goto(self, url):
         self.driver.get(url)
@@ -68,14 +89,23 @@ class Automat:
         self.focus = self.driver.find_element(by=By.XPATH, value=xpath)
     def text(self, txt):
         self.focus.clear()
+    def text(self, txt):
         self.focus.send_keys(txt)
     def text_s(self, secret):
-        self.focus.clear()
         self.focus.send_keys(self.secrets[secret])
     def text_i(self, msg):
-        self.focus.clear()
         txt = input(msg)
         self.focus.send_keys(txt)
+    def select(self, idx):
+        idx = int(idx)
+        sel = Select(self.focus)
+        sel.select_by_index(idx)
+    def select_v(self, value):
+        sel = Select(self.focus)
+        sel.select_by_value(value)
+    def select_t(self, text):
+        sel = Select(self.focus)
+        sel.select_by_visible_text(text)
     def click(self, query):
         self.driver.find_element(by=By.CSS_SELECTOR, value=query).click()
     def click_x(self, xpath):
@@ -86,9 +116,9 @@ class Automat:
         self.focus.send_keys(Keys.TAB)
     def __del__(self):
         # save secrets
-        # with open(".secrets", "w") as f:
-        #     json.dump(f)
-        self.quit()
+        with open("secrets.json", "w") as f:
+            json.dump(self.secrets, f)
+        self.quit("")
     def session(self):
         self.driver = webdriver.Firefox()
         self.running = True
