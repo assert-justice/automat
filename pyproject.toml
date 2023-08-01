@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "automat"
+version = "0.1.0"
+description = "Web automation made easy."
+authors = ["riley <rileywestonmiller@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+selenium = "^4.11.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

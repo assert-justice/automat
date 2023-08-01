@@ -1,8 +1,9 @@
-from lib2to3.pgen2 import driver
+# from lib2to3.pgen2 import driver
 import sys, os, json
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 class Automat:
     def __init__(self):
@@ -13,7 +14,7 @@ class Automat:
         else:
             with open(".secrets") as f:
                 self.secrets = json.load(f)
-                print(self.secrets)
+                # print(self.secrets)
         self.driver = None
         self.sequence = []
         self.checkpoint = 0
@@ -55,16 +56,16 @@ class Automat:
         name = arg[:idx]
         val = arg[idx+1:]
         self.secrets[name] = val
-    def quit(self, _):
+    def quit(self):
         self.running = False
         if self.driver:
             self.driver.quit()
     def goto(self, url):
         self.driver.get(url)
-    def grab(self, query):
-        self.focus = self.driver.find_element_by_css_selector(query)
+    def grab(self, query: str):
+        self.focus = self.driver.find_element(by=By.CSS_SELECTOR, value=query)
     def grab_x(self, xpath):
-        self.focus = self.driver.find_element_by_xpath(xpath)
+        self.focus = self.driver.find_element(by=By.XPATH, value=xpath)
     def text(self, txt):
         self.focus.clear()
         self.focus.send_keys(txt)
@@ -76,9 +77,9 @@ class Automat:
         txt = input(msg)
         self.focus.send_keys(txt)
     def click(self, query):
-        self.driver.find_element_by_css_selector(query).click()
+        self.driver.find_element(by=By.CSS_SELECTOR, value=query).click()
     def click_x(self, xpath):
-        self.driver.find_element_by_xpath(xpath).click()
+        self.driver.find_element(by=By.XPATH, value=xpath).click()
     def enter(self, _):
         self.focus.send_keys(Keys.ENTER)
     def tab(self, _):
@@ -99,20 +100,25 @@ class Automat:
     def run_seq(self, seq):
         if not self.driver:
             o = Options()
-            o.add_argument("--headless")
+            # o.add_argument("--headless")
             self.driver = webdriver.Firefox(options=o)
+        for com in seq:
+            self.exec(com)
 
     def exec(self, action:str):
-        command = action
-        arg = ""
-        idx = action.find(" ")
-        if idx != -1:
-            action = action[:idx]
-            arg = action[idx+1:]
-        action = action.strip()
-        arg = arg.strip()
+        command = action.split(" ")
+        # arg = ""
+        # idx = action.find(" ")
+        # if idx != -1:
+        #     action = action[:idx]
+        #     arg = action[idx+1:]
+        # action = action.strip()
+        # arg = arg.strip()
+        action = command[0]
+        arg = command[1] if len(command) > 1 else None 
+        print(action, arg)
         if action in self.commands:
-            print(action, arg)
+            # print(action, arg)
             self.commands[action](arg)
         else:
             print(f"command '{action} not recognized'")
@@ -125,7 +131,7 @@ def main():
     if len(args) == 0:
         automat.session()
     else:
-        with open(args[1]) as f:
+        with open(args[0]) as f:
             seq = f.read().splitlines()
             automat.run_seq(seq)
 
